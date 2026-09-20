@@ -28,7 +28,38 @@ Apesar da Lei de Cotas (Lei nº 8.213/1991) no Brasil, as empresas frequentement
 ## 2. Organização do Projeto (CRISP-DM e TDSP)
 
 1. **Entendimento do Negócio (*Business Understanding / Charter*):** Mapeamento de problemas de retenção e definição das métricas ESG.
-2. **Entendimento dos Dados (*Data Acquisition and Understanding*):** Coleta via API de dados públicos (RAIS/CAGED, IBGE) e simulados de recrutamento.
-3. **Preparação dos Dados (*Data Preparation*):** Limpeza, tratamento de nulos e padronização da CBO e tipos de deficiência.
-4. **Modelagem e Aplicação (*Modeling / App Dev*):** Construção do dashboard interativo em Streamlit.
-5. **Implantação (*Deployment*):** Publicação no Streamlit Cloud e entrega de artefatos no GitHub.
+2. **Entendimento dos Dados (*Data Acquisition and Understanding*):** Coleta via Web Scraping de notícias/portais públicos e dados simulados de recrutamento.
+3. **Preparação dos Dados (*Data Preparation*):** Limpeza, tratamento de nulos, contagem de frequência de texto e padronização da CBO e tipos de deficiência.
+4. **Modelagem e Aplicação (*Modeling / App Dev*):** Construção do dashboard interativo em Streamlit com cache, filtros, upload de arquivos e nuvem de palavras.
+5. **Implantação (*Deployment*):** Publicação no Streamlit Cloud e integração contínua com versionamento Git/GitHub.
+
+---
+
+## 3. Como Executar o Projeto Localmente
+
+Siga as instruções abaixo para configurar o ambiente virtual, instalar as dependências e executar a aplicação em sua máquina.
+
+### Pré-requisitos
+* **Python 3.10+** instalado.
+* Gerenciador de pacotes **pip** atualizado.
+
+### Passo a Passo de Instalação e Execução
+
+1. **Clonar o repositório:**
+   ```bash
+   git clone [https://github.com/carolinarcpassos/Projeto-de-Bloco-Inteligencia-Artificial-Aplicada.git](https://github.com/carolinarcpassos/Projeto-de-Bloco-Inteligencia-Artificial-Aplicada.git)
+   cd Painel_ODS
+
+---
+
+## 4. Declaração de Uso de Ferramentas de Inteligência Artificial
+
+Em conformidade com as diretrizes acadêmicas do projeto sobre o uso transparente de IA Generativa, declara-se a utilização das seguintes ferramentas como apoio ao desenvolvimento e estudos:
+
+1. **Gemini 2.5 Flash / Gemini 2.0 (Google AI):**
+   * **Aplicação:** Assistente de código e arquitetura.
+   * **Finalidade:** Suporte na estruturação e otimização de componentes do Streamlit (`st.form`, `st.session_state`, `st.file_uploader`), desenvolvimento do script de Web Scraping (`coleta_web.py`), geração do gráfico de palavras mais frequentes, criação da Nuvem de Palavras (`WordCloud`) e auxílio na documentação metodológica (CRISP-DM/TDSP).
+
+2. **NotebookLM (Google):**
+   * **Aplicação:** Ambiente de estudo e síntese de conhecimento.
+   * **Finalidade:** Análise, organização de notas e fixação dos conceitos teóricos contidos nas ementas, materiais da disciplina e documentações técnicas do projeto.
