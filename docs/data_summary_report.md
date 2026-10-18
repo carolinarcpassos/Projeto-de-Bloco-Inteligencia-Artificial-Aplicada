@@ -36,3 +36,27 @@
 * **Otimização e Caching:** Utilização do decorator `@st.cache_data` na função de carregamento da amostragem, evitando releituras do disco a cada renderização da interface.
 * **Tratamento de Exceções:** Implementação de blocos `try...except` na leitura de arquivos enviados via upload e na abertura de fontes de dados, garantindo mensagens claras ao usuário final (`st.error`).
 * **Privacidade e LGPD:** A base de dados opera exclusivamente com identificadores genéricos (`PCD-101`, `PCD-102`), sem exposição de dados pessoais sensíveis (PII).
+
+---
+
+## 4. Novas Fontes e Fluxos de Dados (TP3)
+
+### 4.1. Coleta Dinâmica via Selenium (Dados Brutos)
+- **Origem:** Raspagem dinâmica de dados do portal Agência Brasil (Direitos Humanos).
+- **Arquivo Salvo:** `data/raw/pagina_dinamica.html`
+- **Formato:** HTML bruto (snapshot da página carregada via JavaScript).
+- **Finalidade:** Servir de base para o processamento e extração de notícias com BeautifulSoup (`data/processed/noticias_pcd.csv`).
+
+### 4.2. Endpoints da API REST (FastAPI)
+- **Base de Dados:** `amostra_pcd_uf.json`
+- **Estrutura dos Dados Trafegados (Schema Pydantic):**
+  - `ID` (string): Identificador único do colaborador.
+  - `Setor` (string): Setor de atuação (ex: Tecnologia, Varejo, Saúde).
+  - `Tipo_Deficiencia` (string): Tipo de deficiência declarada.
+  - `Modelo` (string): Modelo de trabalho (Remoto, Híbrido, Presencial).
+  - `Tempo_Casa_Meses` (inteiro): Tempo de permanência na empresa em meses.
+  - `Acessibilidade` (string): Nível de acessibilidade do posto (Sim, Parcial, Não).
+  - `Escolaridade` (string): Grau de instrução do colaborador.
+- **Rotas:**
+  - `GET /colaboradores`: Retorna a lista completa de colaboradores em formato JSON.
+  - `POST /colaboradores`: Recebe um payload JSON no formato do schema acima para cadastrar um novo registro.

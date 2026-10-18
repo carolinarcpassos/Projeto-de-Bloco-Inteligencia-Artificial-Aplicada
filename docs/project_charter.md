@@ -30,6 +30,13 @@
 * **Risco 2:** Recarregamento lento e perda de performance durante interações do usuário no dashboard.
 * **Mitigação:** Aplicação do decorator `@st.cache_data` para leitura de dados e isolamento dos filtros em `st.form`.
 
+## 7. Preparação para Uso de LLMs (Próxima Fase)
+Os dados coletados nesta etapa foram estruturados para viabilizar as seguintes aplicações com Large Language Models:
+* **Classificação de Sentimentos:** Categorização do tom das manchetes de notícias (`noticias_pcd.csv`) em positivo, neutro ou denúncia.
+* **Resumo Automático:** Geração de relatórios executivos narrativos sobre o nível de acessibilidade com base nos indicadores.
+* **Sistema de Perguntas e Respostas (Q&A / RAG):** Assistente inteligente para tirar dúvidas sobre cotas e acessibilidade.
+
 ## 6. Cronograma de Evolução
 * **Fase 1 (TP1):** Definição do escopo, Project Charter inicial, Data Summary Report preliminar e App Demo básico em Streamlit.
 * **Fase 2 (TP2):** Implementação de Web Scraping, filtros interativos com formulário, persistência de estado (`session_state`), geração de nuvem de palavras, caching, upload/download de dados e atualização da documentação técnica.
+* **Fase 3 (TP3):** Reestruturação da aplicação em ambiente multipáginas (`pages/`), criação de API REST com FastAPI (endpoints `GET` e `POST`), implementação de Web Scraping dinâmico com Selenium, consolidação do repositório modular e atualização da documentação estratégica para integração com LLMs.
