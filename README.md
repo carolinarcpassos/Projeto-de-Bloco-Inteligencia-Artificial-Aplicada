@@ -82,10 +82,10 @@ Siga as instruções abaixo para configurar o ambiente virtual, instalar as depe
 
 python -m venv .venv
 
-# No Linux/macOS: 
+- No Linux/macOS: 
 source .venv/bin/activate
 
-# No Windows (PowerShell): 
+- No Windows (PowerShell): 
 .venv\Scripts\Activate.ps1
 
 3. **Instalar as dependências:**
