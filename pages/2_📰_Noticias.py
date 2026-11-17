@@ -4,6 +4,7 @@ from pathlib import Path
 from collections import Counter
 import matplotlib.pyplot as plt
 from wordcloud import WordCloud
+import requests
 
 st.set_page_config(page_title="IncluaTech | Notícias", page_icon="📰", layout="wide")
 
@@ -47,3 +48,42 @@ if path_noticias_csv.exists():
             st.pyplot(fig)
 else:
     st.info("💡 Nenhuma notícia encontrada em `data/processed/noticias_pcd.csv`. Execute o script de scraping no terminal para gerar os dados.")
+
+
+st.divider()
+st.markdown("### 🤖 Analisador Inteligente de Notícias (LLM Local via FastAPI)")
+
+texto_padrao = (
+    df_noticias["manchete"].iloc[0]
+    if path_noticias_csv.exists() and not df_noticias.empty
+    else "Cargos de liderança são só 1,5% das vagas para pessoas com deficiência"
+)
+
+texto_input = st.text_area(
+    "Selecione ou edite uma manchete sobre inclusão PcD para classificar o impacto ESG:",
+    value=texto_padrao
+)
+
+if st.button("Analisar Texto com IA Local"):
+    try:
+        resp = requests.post(
+            "http://localhost:8000/processar_texto",
+            json={"texto": texto_input, "fonte": "Agência Brasil"},
+            timeout=15
+        )
+        if resp.status_code == 200:
+            dados = resp.json()
+            res = dados["resultado"]
+            st.success(f"**Classificação IncluaTech:** {res['categoria_incluatech']} (Confiança: {res['confianca']*100:.1f}%)")
+            st.info(f"**Interpretação:** {res['resumo_interpretacao']}")
+            with st.expander("Ver resposta JSON estruturada (Response Model)"):
+                st.json(dados)
+        elif resp.status_code == 422:
+            st.warning("⚠️ Erro de validação (422): informe um texto entre 5 e 500 caracteres.")
+        else:
+            detalhe = resp.json().get("detail", "Erro desconhecido na API.")
+            st.error(f"❌ Erro {resp.status_code}: {detalhe}")
+    except requests.exceptions.ConnectionError:
+        st.error("🔌 API FastAPI offline (`http://localhost:8000`). Inicie com `uvicorn api.main:app --reload --port 8000`.")
+    except requests.exceptions.Timeout:
+        st.error("⏳ Tempo limite excedido ao aguardar resposta do modelo LLM local.")
