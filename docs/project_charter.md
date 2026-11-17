@@ -21,22 +21,24 @@
 * **ODS 10:** Redução das Desigualdades (Meta 10.2 - Empoderar e promover a inclusão social, econômica e política de todos, independentemente de deficiência).
 
 ## 4. Arquitetura de IA Generativa & Ética Acadêmica
-* **Ferramentas:** Gemini 2.5 Flash / Gemini 2.0 (Google AI) e NotebookLM (Google).
-* **Escopo de Uso:** Auxílio na estruturação de código Python/Streamlit, refatoração de componentes visuais, lógica de tratamento de dados com Pandas e síntese de material didático de suporte.
+* **Ferramentas de Apoio ao Desenvolvimento:** Gemini (Google AI) e NotebookLM (Google) para auxílio na estruturação de código Python/Streamlit/FastAPI, tratamento de dados e síntese de material didático.
+* **Modelo LLM Embarcado na Aplicação (Execução Local):** `nlptown/bert-base-multilingual-uncased-sentiment` (arquitetura BERT multilíngue), carregado offline via `transformers` (`local_files_only=True`) para classificação de sentimento e impacto ESG de notícias PcD.
 
 ## 5. Riscos e Mitigações
 * **Risco 1:** Indisponibilidade de portais públicos ou alteração na estrutura HTML durante o Web Scraping.
-* **Mitigação:** Tratamento de exceções com blocos `try...except` e fallback para arquivos pré-processados na pasta `data/processed/`.
-* **Risco 2:** Recarregamento lento e perda de performance durante interações do usuário no dashboard.
-* **Mitigação:** Aplicação do decorator `@st.cache_data` para leitura de dados e isolamento dos filtros em `st.form`.
+  * **Mitigação:** Tratamento de exceções com blocos `try...except` e fallback para arquivos pré-processados na pasta `data/processed/`.
+* **Risco 2:** Recarregamento lento e perda de performance durante interações no dashboard.
+  * **Mitigação:** Aplicação do decorator `@st.cache_data` para leitura de dados e isolamento dos filtros em `st.form`.
+* **Risco 3:** Indisponibilidade do cache local do modelo LLM ou falha de comunicação entre Streamlit e FastAPI.
+  * **Mitigação:** Carregamento único no `lifespan` do FastAPI com retorno padronizado `503 Service Unavailable` caso o modelo não esteja baixado, além de tratamento de `ConnectionError` e `Timeout` na interface Streamlit.
 
-## 7. Preparação para Uso de LLMs (Próxima Fase)
-Os dados coletados nesta etapa foram estruturados para viabilizar as seguintes aplicações com Large Language Models:
-* **Classificação de Sentimentos:** Categorização do tom das manchetes de notícias (`noticias_pcd.csv`) em positivo, neutro ou denúncia.
-* **Resumo Automático:** Geração de relatórios executivos narrativos sobre o nível de acessibilidade com base nos indicadores.
-* **Sistema de Perguntas e Respostas (Q&A / RAG):** Assistente inteligente para tirar dúvidas sobre cotas e acessibilidade.
+## 6. Arquitetura de Evolução com LLMs
+Os dados coletados e estruturados nas etapas anteriores viabilizam as seguintes capacidades de IA na aplicação:
+* **Classificação de Sentimentos e Impacto ESG (Implementado na TP4):** Categorização automática do tom das manchetes de notícias (`noticias_pcd.csv`) entre alerta/denúncia, informativo neutro e avanço positivo via modelo BERT local (`POST /processar_texto`).
+* **Memória Conversacional e Agentes (Planejado para TP5):** Evolução da aplicação com histórico de contexto e assistente inteligente para apoiar gestores de RH na interpretação dos indicadores de retenção e acessibilidade.
 
-## 6. Cronograma de Evolução
+## 7. Cronograma de Evolução
 * **Fase 1 (TP1):** Definição do escopo, Project Charter inicial, Data Summary Report preliminar e App Demo básico em Streamlit.
 * **Fase 2 (TP2):** Implementação de Web Scraping, filtros interativos com formulário, persistência de estado (`session_state`), geração de nuvem de palavras, caching, upload/download de dados e atualização da documentação técnica.
-* **Fase 3 (TP3):** Reestruturação da aplicação em ambiente multipáginas (`pages/`), criação de API REST com FastAPI (endpoints `GET` e `POST`), implementação de Web Scraping dinâmico com Selenium, consolidação do repositório modular e atualização da documentação estratégica para integração com LLMs.
+* **Fase 3 (TP3):** Reestruturação da aplicação em ambiente multipáginas (`pages/`), criação de API REST com FastAPI (endpoints `GET` e `POST`), implementação de Web Scraping dinâmico com Selenium e consolidação do repositório modular.
+* **Fase 4 (TP4):** Seleção documentada do modelo LLM local (`docs/escolha_do_modelo.md`), script de cache offline (`src/baixar_modelo.py`), integração do BERT multilíngue na rota `POST /processar_texto` com `Response Models` Pydantic e tratamento robusto de exceções HTTP (`400`, `422`, `500`, `503`), além da integração com a interface Streamlit.

@@ -16,22 +16,22 @@ Apesar da Lei de Cotas (Lei nº 8.213/1991) no Brasil, as empresas frequentement
 * **ODS 8: Trabalho Decente e Crescimento Econômico** (Meta 8.5: Trabalho decente e igualdade de remuneração para pessoas com deficiência).
 * **ODS 10: Redução das Desigualdades** (Meta 10.2: Promover a inclusão social, econômica e política de todos).
 
-**Justificativa:** Promover a inclusão PcD combate a exclusão socioeconômica, reduz desigualdades e impulsiona o pilar Social (S) da governança ESG.
+**Justificativa:** Promover a inclusão PcD combate a exclusão socioeconômica, reduz desigualdades e impulsiona o pilar Social (S) da governança ESG[cite: 6].
 
 ### Público-Alvo
-* Equipes de RH e Gestores de ESG/Diversidade.
-* Candidatos e Profissionais PcD.
-* Órgãos do Terceiro Setor e Gestores Públicos.
+* Equipes de RH e Gestores de ESG/Diversidade[cite: 6].
+* Candidatos e Profissionais PcD[cite: 6].
+* Órgãos do Terceiro Setor e Gestores Públicos[cite: 6].
 
 ---
 
 ## 2. Organização do Projeto (CRISP-DM e TDSP)
 
-1. **Entendimento do Negócio (*Business Understanding / Charter*):** Mapeamento de problemas de retenção, definição das métricas ESG e planejamento de integração com LLMs.
-2. **Entendimento dos Dados (*Data Acquisition and Understanding*):** Coleta via Web Scraping estático e dinâmico (Selenium), dados de colaboradores e consumo de dados por API REST.
-3. **Preparação dos Dados (*Data Preparation*):** Limpeza, extração de texto HTML, filtragem, contagem de frequência e estruturação JSON com validação via Pydantic.
-4. **Modelagem e Aplicação (*Modeling / App Dev*):** Construção da interface multipáginas no Streamlit (`pages/`), gráficos interativos, nuvem de palavras, formulários com retenção de estado (`session_state`) e API com FastAPI.
-5. **Implantação (*Deployment*):** Publicação no Streamlit Community Cloud, disponibilização da API REST e versionamento com histórico incremental no GitHub.
+1. **Entendimento do Negócio (*Business Understanding / Charter*):** Mapeamento de problemas de retenção, definição das métricas ESG e planejamento de integração com LLMs[cite: 6].
+2. **Entendimento dos Dados (*Data Acquisition and Understanding*):** Coleta via Web Scraping estático e dinâmico (Selenium), dados de colaboradores e consumo de dados por API REST[cite: 6].
+3. **Preparação dos Dados (*Data Preparation*):** Limpeza, extração de texto HTML, filtragem, contagem de frequência e estruturação JSON com validação via Pydantic[cite: 6].
+4. **Modelagem e Aplicação (*Modeling / App Dev & LLM Local*):** Construção da interface multipáginas no Streamlit (`pages/`), gráficos interativos, nuvem de palavras, formulários com retenção de estado (`session_state`), API com FastAPI (`Response Models` e tratamento de exceções HTTP) e integração de modelo LLM local (`nlptown/bert-base-multilingual-uncased-sentiment`) via HuggingFace/PyTorch para classificação de sentimento das notícias PcD[cite: 6, 16].
+5. **Implantação (*Deployment*):** Disponibilização local offline do modelo LLM, execução integrada entre API REST e painel Streamlit, e versionamento com histórico incremental no GitHub[cite: 6].
 
 ---
 
@@ -40,19 +40,21 @@ Apesar da Lei de Cotas (Lei nº 8.213/1991) no Brasil, as empresas frequentement
 ```text
 Projeto-de-Bloco-Inteligencia-Artificial-Aplicada/
 ├── .venv/                      # Ambiente virtual Python
-├── api/                        # Serviço de API REST (FastAPI)
-│   └── main.py                 # Endpoints GET e POST com validação Pydantic
+├── api/                        # Serviço de API REST (FastAPI + LLM Local)
+│   └── main.py                 # Endpoints GET/POST, Response Models, erros HTTP e rota /processar_texto
 ├── data/                       # Armazenamento de dados
 │   ├── processed/              # Dados processados (CSV, TXT)
 │   └── raw/                    # Dados brutos (HTML via Selenium, JSON)
 ├── docs/                       # Documentação técnica do projeto
 │   ├── data_summary_report.md  # Relatório sumário dos dados
-│   └── project_charter.md      # Project Charter com planejamento de LLMs
+│   ├── escolha_do_modelo.md    # Critérios de seleção e justificativa do LLM local (TP4)
+│   └── project_charter.md      # Project Charter com planejamento e evolução de LLMs
 ├── pages/                      # Páginas do ecossistema multipáginas Streamlit
 │   ├── 1_📊_Indicadores.py     # Dashboard analítico e métricas
-│   ├── 2_📰_Noticias.py        # Visualizações de scraping e nuvem de palavras
-│   └── 3_📥_Ingestao_e_API.py  # Módulo de upload de CSV e documentação da API
-├── src/                        # Scripts de raspagem e automação
+│   ├── 2_📰_Noticias.py        # Visualizações de scraping, WordCloud e analisador LLM local
+│   └── 3_📥_Ingestao_e_API.py  # Módulo de upload de CSV, documentação e status da API
+├── src/                        # Scripts de raspagem, automação e download de modelo
+│   ├── baixar_modelo.py        # Download prévio do modelo HuggingFace para o cache local
 │   ├── coleta_dinamica.py      # Automação de coleta com Selenium
 │   └── coleta_web.py           # Raspagem de dados web
 ├── Home.py                     # Aplicação principal (Home Page)
@@ -92,13 +94,26 @@ source .venv/bin/activate
 
 pip install -r requirements.txt
 
-4. **Executar a aplicação Streamlit (Painel Multipáginas):**
+4. **Baixar o modelo LLM para o cache local (executar uma vez com internet):**
 
-streamlit run Home.py
+python src/baixar_modelo.py
 
-5. **Executar o serviço de API REST (FastAPI - opcional em novo terminal):**
+5. **Executar o serviço de API REST + LLM Local (FastAPI - Terminal 1):**
 
 uvicorn api.main:app --reload --port 8000
+
+Documentação interativa (Swagger UI): http://localhost:8000/docs
+Principais rotas disponíveis:
+
+   GET /: Verifica saúde da API e status de carregamento do modelo LLM.
+
+   GET /colaboradores e POST /colaboradores: Consulta e cadastro de colaboradores PcD.
+
+   POST /processar_texto: Classifica o sentimento e o impacto ESG de manchetes/textos sobre inclusão PcD rodando 100% localmente (local_files_only=True).
+
+6. **Executar a aplicação Streamlit (Painel Multipáginas):**
+
+streamlit run home.py
 
 ---
 
@@ -108,7 +123,7 @@ Em conformidade com as diretrizes acadêmicas do projeto sobre o uso transparent
 
 1. **Gemini 2.5 Flash / Gemini 2.0 (Google AI):**
    * **Aplicação:** Assistente de código e arquitetura.
-   * **Finalidade:** Suporte na estruturação do ambiente multipáginas (pages/), desenvolvimento de endpoints REST com FastAPI e Pydantic, automação de raspagem dinâmica com Selenium (coleta_dinamica.py), refatoração do layout da barra lateral, geração da nuvem de palavras (WordCloud) e padronização dos commits com Conventional Commits.
+   * **Finalidade:** Suporte na estruturação do ambiente multipáginas (pages/), desenvolvimento de endpoints REST com FastAPI e Pydantic (Response Models e exceções HTTP), integração local de modelo HuggingFace (transformers / torch), automação de raspagem dinâmica com Selenium (coleta_dinamica.py), refatoração do layout da barra lateral, geração da nuvem de palavras (WordCloud) e padronização dos commits com Conventional Commits.
 
 2. **NotebookLM (Google):**
    * **Aplicação:** Ambiente de estudo e síntese de conhecimento.
