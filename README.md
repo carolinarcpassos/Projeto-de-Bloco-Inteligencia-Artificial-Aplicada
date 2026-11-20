@@ -16,22 +16,22 @@ Apesar da Lei de Cotas (Lei nº 8.213/1991) no Brasil, as empresas frequentement
 * **ODS 8: Trabalho Decente e Crescimento Econômico** (Meta 8.5: Trabalho decente e igualdade de remuneração para pessoas com deficiência).
 * **ODS 10: Redução das Desigualdades** (Meta 10.2: Promover a inclusão social, econômica e política de todos).
 
-**Justificativa:** Promover a inclusão PcD combate a exclusão socioeconômica, reduz desigualdades e impulsiona o pilar Social (S) da governança ESG[cite: 6].
+**Justificativa:** Promover a inclusão PcD combate a exclusão socioeconômica, reduz desigualdades e impulsiona o pilar Social (S) da governança ESG.
 
 ### Público-Alvo
-* Equipes de RH e Gestores de ESG/Diversidade[cite: 6].
-* Candidatos e Profissionais PcD[cite: 6].
-* Órgãos do Terceiro Setor e Gestores Públicos[cite: 6].
+* Equipes de RH e Gestores de ESG/Diversidade.
+* Candidatos e Profissionais PcD
+* Órgãos do Terceiro Setor e Gestores Públicos.
 
 ---
 
 ## 2. Organização do Projeto (CRISP-DM e TDSP)
 
-1. **Entendimento do Negócio (*Business Understanding / Charter*):** Mapeamento de problemas de retenção, definição das métricas ESG e planejamento de integração com LLMs[cite: 6].
-2. **Entendimento dos Dados (*Data Acquisition and Understanding*):** Coleta via Web Scraping estático e dinâmico (Selenium), dados de colaboradores e consumo de dados por API REST[cite: 6].
-3. **Preparação dos Dados (*Data Preparation*):** Limpeza, extração de texto HTML, filtragem, contagem de frequência e estruturação JSON com validação via Pydantic[cite: 6].
-4. **Modelagem e Aplicação (*Modeling / App Dev & LLM Local*):** Construção da interface multipáginas no Streamlit (`pages/`), gráficos interativos, nuvem de palavras, formulários com retenção de estado (`session_state`), API com FastAPI (`Response Models` e tratamento de exceções HTTP) e integração de modelo LLM local (`nlptown/bert-base-multilingual-uncased-sentiment`) via HuggingFace/PyTorch para classificação de sentimento das notícias PcD[cite: 6, 16].
-5. **Implantação (*Deployment*):** Disponibilização local offline do modelo LLM, execução integrada entre API REST e painel Streamlit, e versionamento com histórico incremental no GitHub[cite: 6].
+1. **Entendimento do Negócio (*Business Understanding / Charter*):** Mapeamento de problemas de retenção, definição das métricas ESG e planejamento de integração com LLMs.
+2. **Entendimento dos Dados (*Data Acquisition and Understanding*):** Coleta via Web Scraping estático e dinâmico (Selenium), dados de colaboradores e consumo de dados por API REST.
+3. **Preparação dos Dados (*Data Preparation*):** Limpeza, extração de texto HTML, filtragem, contagem de frequência e estruturação JSON com validação via Pydantic.
+4. **Modelagem e Aplicação (*Modeling / App Dev & LLM Local*):** Construção da interface multipáginas no Streamlit (`pages/`), gráficos interativos, nuvem de palavras, formulários com retenção de estado (`session_state`), API com FastAPI (`Response Models` e tratamento de exceções HTTP) e integração de modelo LLM local (`nlptown/bert-base-multilingual-uncased-sentiment`) via HuggingFace/PyTorch para classificação de sentimento das notícias PcD.
+5. **Implantação (*Deployment*):** Disponibilização local offline do modelo LLM, execução integrada entre API REST e painel Streamlit, e versionamento com histórico incremental no GitHub.
 
 ---
 
@@ -39,27 +39,30 @@ Apesar da Lei de Cotas (Lei nº 8.213/1991) no Brasil, as empresas frequentement
 
 ```text
 Projeto-de-Bloco-Inteligencia-Artificial-Aplicada/
-├── .venv/                      # Ambiente virtual Python
-├── api/                        # Serviço de API REST (FastAPI + LLM Local)
-│   └── main.py                 # Endpoints GET/POST, Response Models, erros HTTP e rota /processar_texto
-├── data/                       # Armazenamento de dados
-│   ├── processed/              # Dados processados (CSV, TXT)
-│   └── raw/                    # Dados brutos (HTML via Selenium, JSON)
-├── docs/                       # Documentação técnica do projeto
-│   ├── data_summary_report.md  # Relatório sumário dos dados
-│   ├── escolha_do_modelo.md    # Critérios de seleção e justificativa do LLM local (TP4)
-│   └── project_charter.md      # Project Charter com planejamento e evolução de LLMs
-├── pages/                      # Páginas do ecossistema multipáginas Streamlit
-│   ├── 1_📊_Indicadores.py     # Dashboard analítico e métricas
-│   ├── 2_📰_Noticias.py        # Visualizações de scraping, WordCloud e analisador LLM local
-│   └── 3_📥_Ingestao_e_API.py  # Módulo de upload de CSV, documentação e status da API
-├── src/                        # Scripts de raspagem, automação e download de modelo
-│   ├── baixar_modelo.py        # Download prévio do modelo HuggingFace para o cache local
-│   ├── coleta_dinamica.py      # Automação de coleta com Selenium
-│   └── coleta_web.py           # Raspagem de dados web
-├── Home.py                     # Aplicação principal (Home Page)
-├── README.md                   # Documentação do repositório
-└── requirements.txt            # Dependências e bibliotecas do projeto
+├── .venv/                       # Ambiente virtual Python
+├── api/                         # Serviço de API REST (FastAPI + LLMs)
+│   └── main.py                  # Endpoints CRUD, BERT local (/processar_texto) e Chat ESG (/chat_esg)
+├── data/                        # Armazenamento de dados
+│   ├── processed/               # Dados processados (noticias_pcd.csv, noticias_pcd.txt)
+│   └── raw/                     # Dados brutos (HTML via Selenium)
+├── docs/                        # Artefatos do TDSP e documentação técnica
+│   ├── data_summary_report.md   # Relatório sumário dos dados e consolidação do pipeline
+│   ├── escolha_do_modelo.md     # Critérios de seleção e justificativa do modelo BERT local
+│   ├── integracao_llm_api.md    # Arquitetura da API, Response Models e matriz de erros HTTP
+│   └── project_charter.md       # Project Charter com escopo, riscos e cronograma completo
+├── pages/                       # Páginas do ecossistema multipáginas Streamlit
+│   ├── 1_📊_Indicadores.py      # Dashboard analítico de retenção e acessibilidade PcD
+│   ├── 2_📰_Noticias.py         # Visualizações de scraping, WordCloud e classificador BERT local
+│   ├── 3_📥_Ingestao_e_API.py   # Upload de CSV, documentação e verificação de status da API
+│   └── 4_💬_Assistente_ESG.py   # Dashboard final com pipeline integrado e chat ESG com memória
+├── src/                         # Scripts de raspagem e cache offline de modelo
+│   ├── baixar_modelo.py         # Download prévio do modelo HuggingFace para o cache local
+│   ├── coleta_dinamica.py       # Automação de coleta com Selenium
+│   └── coleta_web.py            # Raspagem de dados web com BeautifulSoup
+├── amostra_pcd_uf.json          # Base estruturada de colaboradores PcD
+├── Home.py                      # Aplicação principal (Home Page)
+├── README.md                    # Documentação geral do repositório
+└── requirements.txt             # Dependências e bibliotecas do projeto
 ```
 
 ---
@@ -72,6 +75,7 @@ Siga as instruções abaixo para configurar o ambiente virtual, instalar as depe
 * **Python 3.10+** instalado.
 * Gerenciador de pacotes **pip** atualizado.
 * Google Chrome instalado (necessário para a execução do Selenium WebDriver).
+* Chave de API gratuita do OpenRouter (https://openrouter.ai) para ativar as respostas generativas completas no Assistente ESG (caso não seja informada, a aplicação opera em modo analítico de contingência usando os dados locais).
 
 ### Passo a Passo de Instalação e Execução
 
@@ -111,9 +115,14 @@ Principais rotas disponíveis:
 
    POST /processar_texto: Classifica o sentimento e o impacto ESG de manchetes/textos sobre inclusão PcD rodando 100% localmente (local_files_only=True).
 
+   POST /chat_esg e DELETE /chat_esg/{session_id}: Assistente conversacional ESG com memória de sessão via OpenRouter e grounding automático nos dados internos e raspados.
+
 6. **Executar a aplicação Streamlit (Painel Multipáginas):**
 
 streamlit run home.py
+Acesse no navegador: http://localhost:8501
+
+Na página 💬 Assistente ESG, insira sua OpenRouter API Key na barra lateral e interaja com o chat para obter análises contextualizadas sobre retenção, acessibilidade e notícias PcD.
 
 ---
 
@@ -123,8 +132,12 @@ Em conformidade com as diretrizes acadêmicas do projeto sobre o uso transparent
 
 1. **Gemini 2.5 Flash / Gemini 2.0 (Google AI):**
    * **Aplicação:** Assistente de código e arquitetura.
-   * **Finalidade:** Suporte na estruturação do ambiente multipáginas (pages/), desenvolvimento de endpoints REST com FastAPI e Pydantic (Response Models e exceções HTTP), integração local de modelo HuggingFace (transformers / torch), automação de raspagem dinâmica com Selenium (coleta_dinamica.py), refatoração do layout da barra lateral, geração da nuvem de palavras (WordCloud) e padronização dos commits com Conventional Commits.
+   * **Finalidade:** Suporte na estruturação do ambiente multipáginas (pages/), desenvolvimento de endpoints REST com FastAPI e Pydantic (Response Models e exceções HTTP), integração local de modelo HuggingFace (transformers / torch), automação de raspagem dinâmica com Selenium (coleta_dinamica.py), refatoração do layout da barra lateral, geração da nuvem de palavras (WordCloud) implementação da memória conversacional e Prompt Engineering no assistente ESG, além da padronização dos artefatos TSDP e commits semânticos.
 
-2. **NotebookLM (Google):**
+2. **OpenRouter (openrouter/free):
+   * **Aplicação:** Infraestrutura de inferência LLM integrada à aplicação na TP5.
+   * **Finalidade:** Processamento das interações em linguagem natural no endpoint POST /chat_esg, sintetizando indicadores internos de RH e notícias raspadas com manutenção de contexto conversacional.
+
+3. **NotebookLM (Google):**
    * **Aplicação:** Ambiente de estudo e síntese de conhecimento.
    * **Finalidade:** Análise, organização de notas e fixação dos conceitos teóricos contidos nas ementas, materiais da disciplina e documentações técnicas do projeto.
