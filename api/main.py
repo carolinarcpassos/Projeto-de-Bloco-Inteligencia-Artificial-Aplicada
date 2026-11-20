@@ -15,7 +15,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("incluatech_api")
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-JSON_PATH = BASE_DIR / "amostra_pcd_uf.json"
+JSON_PATH = BASE_DIR / "data" / "raw" / "amostra_pcd_uf.json"
 
 MODEL_ID = "nlptown/bert-base-multilingual-uncased-sentiment"
 modelos_locais = {}
@@ -334,7 +334,7 @@ def conversar_assistente_esg(payload: ChatRequestSchema):
                 "temperature": 0.3
             }
 
-            resp_or = requests.post(OPENROUTER_URL, headers=headers, json=body, timeout=30)
+            resp_or = requests.post(OPENROUTER_URL, headers=headers, json=body, timeout=90)
             if resp_or.status_code != 200:
                 erro_api = resp_or.json().get("error", {}).get("message", resp_or.text)
                 raise HTTPException(
