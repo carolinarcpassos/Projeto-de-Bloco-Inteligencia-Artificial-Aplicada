@@ -60,3 +60,16 @@
 - **Rotas:**
   - `GET /colaboradores`: Retorna a lista completa de colaboradores em formato JSON.
   - `POST /colaboradores`: Recebe um payload JSON no formato do schema acima para cadastrar um novo registro.
+
+---
+
+## 5. Consolidação do Ciclo de Dados e Integração com LLMs (TP4 e TP5)
+
+### 5.1. Pipeline Ponta a Ponta de Ciência de Dados
+1. **Coleta (TP2/TP3):** Extração automatizada de manchetes da Agência Brasil via `BeautifulSoup` (`src/coleta_web.py`) e `Selenium` (`src/coleta_dinamica.py`), combinada à base estruturada de colaboradores (`amostra_pcd_uf.json`).
+2. **Enriquecimento Semântico Local (TP4):** Classificação automática das manchetes por meio do modelo BERT multilíngue (`nlptown/bert-base-multilingual-uncased-sentiment`) executado localmente via FastAPI (`POST /processar_texto`), categorizando notícias em *Alerta/Denúncia*, *Neutro/Informativo* ou *Avanço Positivo*.
+3. **Síntese Conversacional e Apoio à Decisão (TP5):** Injeção dinâmica das métricas agregadas de `amostra_pcd_uf.json` (retenção por setor, taxa de acessibilidade, modelos de trabalho) e das manchetes de `data/processed/noticias_pcd.csv` no *System Prompt* do endpoint `POST /chat_esg` (integrado via OpenRouter), permitindo consultas contínuas com memória conversacional no painel Streamlit (`pages/4_💬_Assistente_ESG.py`).
+
+### 5.2. Principais Insights Extraídos dos Dados Reais do Projeto
+* **Correlação entre Acessibilidade e Retenção:** Colaboradores em postos com acessibilidade plena (`Sim`) ou modelo flexível (`Remoto`/`Híbrido`, predominantes em Tecnologia e Financeiro) apresentam maior estabilidade, enquanto setores presenciais sem adaptação (`Logística` e `Indústria`) concentram casos críticos de baixa permanência (entre 2 e 8 meses).
+* **Panorama Midiático:** As manchetes coletadas evidenciam sub-representação de PcDs em cargos de liderança (apenas 1,5% das vagas) e barreiras estruturais, reforçando a urgência de políticas internas alinhadas aos ODS 8 e 10.
