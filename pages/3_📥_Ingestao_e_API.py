@@ -36,7 +36,8 @@ A aplicação possui um serviço autónomo de **API REST** desenvolvido em FastA
   * `GET /`: Verifica o status da API e se o modelo LLM local está carregado na memória.
   * `GET /colaboradores`: Consulta toda a base de colaboradores.
   * `POST /colaboradores`: Regista um novo colaborador na base JSON.
-  * `POST /processar_texto`: Processa manchetes ou textos sobre inclusão PcD utilizando o modelo BERT local (`nlptown/bert-base-multilingual-uncased-sentiment`) e retorna a classificação de impacto ESG validada via *Response Model*.
+  * `POST /processar_texto`: Processa manchetes ou textos sobre inclusão PcD utilizando o modelo BERT local (`nlptown/bert-base-multilingual-uncased-sentiment`) e retorna a classificação de impacto ESG validada via *Response Model
+  * `POST /chat_esg`: Assistente conversacional ESG com memória de sessão via OpenRouter e *grounding* nos dados reais do projeto.*.
 """)
 
 if st.button("Verificar Status da API e do Modelo LLM"):
