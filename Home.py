@@ -66,4 +66,4 @@ with col_link3:
 
 st.divider()
 st.info("👈 **Navegação:** Utiliza o menu lateral para navegar entre as páginas de **Indicadores**, **Notícias** e **Ingestão & API**.")
-st.caption("IncluaTech • Projeto Prático TP3 • Ciência de Dados • 2026")
+st.caption("IncluaTech • Projeto Prático • Ciência de Dados • 2026")

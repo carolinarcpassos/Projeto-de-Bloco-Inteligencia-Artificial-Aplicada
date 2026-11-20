@@ -54,4 +54,4 @@ if st.button("Verificar Status da API e do Modelo LLM"):
     except requests.exceptions.ConnectionError:
         st.error("🔌 Não foi possível conectar em `http://localhost:8000`. Certifique-se de rodar o Uvicorn no terminal.")
 
-st.info("💡 **Dica:** Certifica-te de que executaste `uvicorn api.main:app --reload --port 8000` noutro terminal para que a API fique acessível.")
+st.info("💡 **Dica:** Certifique-se de executar `uvicorn api.main:app --reload --port 8000`  em outro terminal para que a API fique acessível.")
